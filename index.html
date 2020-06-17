@@ -4,27 +4,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="./style.css">
+    <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
 
     <title>SearchMaster</title>
 </head>
 <body>
     <h1 id="title">SearchMaster</h1>
     <p id="intro">by Sandman Solutions</p>
-    <input type="button" id="search" value="search">
+    <div id="searchBar">
+        
+        <input type="text" id="entry" name="searchTerm" value="enter">
+        <input type="button" id="searchBtn" value="search">
+    </div>    
     <div id="output"></div>
 
 
     <script>
 
         window.onload = function(){
-            document.getElementById('search').addEventListener('click', showResults)
+            document.getElementById('searchBtn').addEventListener('click', showResults)
 
         }
         function showResults(){
+            var searchTerm = document.querySelector('input[name="searchTerm"]').value;
+            var url = 'https://en.wikipedia.org/w/api.php?format=json&action=opensearch&origin=*&search=' +searchTerm;
             
-            var url = "https://randomuser.me/api/"
+            var output = document.querySelector('#output')
+
+            output.innerHTML = "<h2>Searching For: "+ searchTerm+ "<h2>"
+
             ajaxJS(url, function(response){
-                console.log(response)
+                for(var x in response){
+                    var holder = typeof response[x] == 'string'? response[x] : response[x][0];
+                    output.innerHTML += '<div>' + holder + '</div>'
+                    
+                }
+               
             })
         }
 
@@ -35,18 +50,11 @@
                     callback(JSON.parse(xhr.responseText))
 
                 }
-                callback('readychange')
+                
             }
             xhr.open('GET', url, true)
             xhr.send();
-
         }
-
-
     </script>
-
-
-
-
 </body>
 </html>
